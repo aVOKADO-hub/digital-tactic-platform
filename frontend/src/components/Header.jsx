@@ -1,10 +1,10 @@
 
 import React from 'react';
-import { Save, Share, Settings, Users, Upload } from 'lucide-react';
+import { Save, Share, Settings, Users, Download } from 'lucide-react';
 import axios from 'axios'; // <-- 1. ІМПОРТУЄМО AXIOS
 
 // 2. ОТРИМУЄМО 'objects' ТА 'drawings' ЯК PROPS
-function Header({ objects, drawings }) {
+function Header({ objects, drawings, onLoadClick }) {
 
     // 3. ФУНКЦІЯ ДЛЯ ЗБЕРЕЖЕННЯ
     const handleSaveScenario = async () => {
@@ -39,6 +39,13 @@ function Header({ objects, drawings }) {
             {/* Права частина: Кнопки */}
             <div className="flex items-center gap-4">
                 {/* 4. ПРИВ'ЯЗУЄМО ФУНКЦІЮ ДО КНОПКИ */}
+                <button
+                    onClick={onLoadClick} // <-- ВІШАЄМО ОБРОБНИК
+                    className="flex items-center gap-2 rounded-md border border-zinc-600 px-3 py-2 text-sm font-medium transition-colors hover:bg-zinc-700"
+                >
+                    <Download size={16} />
+                    Завантажити
+                </button>
                 <button
                     onClick={handleSaveScenario}
                     className="flex items-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium transition-colors hover:bg-blue-700"

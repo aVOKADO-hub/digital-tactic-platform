@@ -42,7 +42,7 @@ function LoadScenarioModal({ onClose, onLoad }) {
     return (
         // Темний фон (backdrop)
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
+            className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/70" // <-- ОСЬ ЗМІНА
             onClick={onClose} // Закриваємо по кліку на фон
         >
             {/* Саме модальне вікно */}
