@@ -42,11 +42,52 @@ const sessionSchema = new mongoose.Schema(
         instructor: {
             type: Schema.Types.ObjectId,
             ref: 'User',
+            ref: 'User',
             required: true, // У кожної сесії має бути інструктор
         },
 
-        // Ми можемо додати сюди 'scenarioId' або 'tacticalObjects' пізніше,
-        // але для старту цього достатньо.
+        // --- TAKTICAL OBJECTS & DRAWINGS ---
+        // --- TAKTICAL OBJECTS & DRAWINGS ---
+        objects: {
+            type: [
+                new Schema({
+                    id: { type: String, required: true },
+                    type: { type: String, required: true },
+                    name: { type: String },
+
+                    // Tactical Symbol Properties (Critical for rendering)
+                    sidc: { type: String },
+                    identity: { type: String },
+                    status: { type: String },
+                    entity: { type: String },
+                    echelon: { type: String },
+                    modifier: { type: String },
+                    direction: { type: Number },
+
+                    latLng: {
+                        lat: { type: Number, required: true },
+                        lng: { type: Number, required: true },
+                    },
+
+                    // Combat stats
+                    hp: { type: Number },
+                    maxHp: { type: Number },
+
+                    rotation: { type: Number },
+                    scale: { type: Number },
+                    layer: { type: String },
+                    text: { type: String }, // For text objects
+                    color: { type: String },
+                    width: { type: Number },
+                    points: [{ lat: Number, lng: Number }], // For lines/polygons
+                }, { _id: false }) // Disable auto _id for subdocs
+            ],
+            default: [],
+        },
+        drawings: {
+            type: [mongoose.Schema.Types.Mixed], // Keep drawings flexible for now
+            default: [],
+        },
     },
     {
         timestamps: true, // createdAt і updatedAt

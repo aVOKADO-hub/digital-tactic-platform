@@ -2,8 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Додай це в кінець: */
+/* Leaflet Icon Styles */
 .leaflet-cursor-icon {
   background: transparent;
   border: none;
+}
+
+/* Milsymbol Selection Highlight */
+.leaflet-milsymbol-icon.selected-symbol svg {
+    filter: drop-shadow(0 0 8px #00ffff) drop-shadow(0 0 2px #0000ff);
+    /* Cyan glow */
 }

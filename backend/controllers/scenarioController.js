@@ -9,17 +9,21 @@ const saveScenario = asyncHandler(async (req, res) => {
     console.log('---!!! УСПІХ! Ми потрапили у saveScenario !!!---');
     // -------------------
 
-    const { name, objects, drawings } = req.body;
+    const { name, objects, drawings, mapId } = req.body;
 
     if (!name || !objects || !drawings) {
         res.status(400);
         throw new Error('Будь ласка, надайте name, objects та drawings');
     }
 
+    // Fix: Handle 'osm' string which causes CastError to ObjectId
+    const finalMapId = (mapId === 'osm' || !mapId) ? null : mapId;
+
     const scenario = await Scenario.create({
         name,
         objects,
         drawings,
+        map: finalMapId
     });
 
     if (scenario) {

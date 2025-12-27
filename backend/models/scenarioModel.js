@@ -17,7 +17,12 @@ const scenarioSchema = new mongoose.Schema(
             type: [mongoose.Schema.Types.Mixed],
             default: [],
         },
-        // (У майбутньому тут можна додати mapId, createdBy тощо)
+        // Посилання на карту, на якій створено сценарій
+        map: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Map',
+            default: null, // Null = OSM
+        },
     },
     {
         timestamps: true, // Автоматично додає 'createdAt'

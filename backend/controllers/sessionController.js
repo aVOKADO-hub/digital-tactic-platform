@@ -18,14 +18,21 @@ const createSession = asyncHandler(async (req, res) => {
         );
     }
 
-    // 3. (Опціонально, але бажано) Перевіряємо, чи існують в базі карта та інструктор
-    const mapExists = await Map.findById(mapId);
+    // 3. Special handling for OSM
+    let finalMapId = mapId;
+    if (mapId === 'osm') {
+        finalMapId = null;
+    } else {
+        // Check if map exists only if it's not OSM
+        const mapExists = await Map.findById(mapId);
+        if (!mapExists) {
+            res.status(404);
+            throw new Error('Карту з таким ID не знайдено');
+        }
+    }
+
     const instructorExists = await User.findById(instructorId);
 
-    if (!mapExists) {
-        res.status(404); // 404 - Not Found
-        throw new Error('Карту з таким ID не знайдено');
-    }
     if (!instructorExists) {
         res.status(404);
         throw new Error('Інструктора (користувача) з таким ID не знайдено');
@@ -34,7 +41,7 @@ const createSession = asyncHandler(async (req, res) => {
     // 4. Якщо все добре - створюємо нову сесію
     const session = await Session.create({
         name,
-        map: mapId,
+        map: finalMapId, // Will be null for OSM or ObjectId for custom map
         instructor: instructorId,
         participants: [instructorId], // Інструктор автоматично стає учасником
     });
@@ -62,4 +69,20 @@ const getAllSessions = asyncHandler(async (req, res) => {
     res.status(200).json(sessions); // 200 - 'OK'
 });
 
-export { createSession, getAllSessions };
+// @desc    Отримати одну сесію за ID
+// @route   GET /api/sessions/:id
+// @access  Public
+const getSessionById = asyncHandler(async (req, res) => {
+    const session = await Session.findById(req.params.id)
+        .populate('map', 'name url')
+        .populate('instructor', 'username role');
+
+    if (session) {
+        res.json(session);
+    } else {
+        res.status(404);
+        throw new Error('Сесію не знайдено');
+    }
+});
+
+export { createSession, getAllSessions, getSessionById };

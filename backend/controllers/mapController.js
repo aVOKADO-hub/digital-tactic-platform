@@ -32,8 +32,7 @@ const uploadMap = asyncHandler(async (req, res) => {
     const map = await Map.create({
         name,
         uploadedBy,
-        url: `/${req.file.path.replace(/\\/g, '/')}`, // Зберігаємо шлях до файлу (нормалізуємо слеші)
-        // "backend/uploads/map-123.png" -> "/backend/uploads/map-123.png"
+        url: `/${req.file.path.replace(/\\/g, '/')}`, // Зберігаємо шлях до файлу
     });
 
     if (map) {
@@ -48,9 +47,26 @@ const uploadMap = asyncHandler(async (req, res) => {
 // @route   GET /api/maps
 // @access  Public
 const getAllMaps = asyncHandler(async (req, res) => {
-    // .populate() візьме ID з 'uploadedBy' і додасть 'username' користувача
     const maps = await Map.find({}).populate('uploadedBy', 'username');
     res.status(200).json(maps);
 });
 
-export { uploadMap, getAllMaps };
+// @desc    Оновити карту (наприклад, калібрувальні дані)
+// @route   PUT /api/maps/:id
+// @access  Public (пізніше Private/Instructor)
+const updateMap = asyncHandler(async (req, res) => {
+    const { calibrationData } = req.body;
+    const map = await Map.findById(req.params.id);
+
+    if (map) {
+        map.calibrationData = calibrationData || map.calibrationData;
+
+        const updatedMap = await map.save();
+        res.json(updatedMap);
+    } else {
+        res.status(404);
+        throw new Error('Карту не знайдено');
+    }
+});
+
+export { uploadMap, getAllMaps, updateMap };

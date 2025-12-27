@@ -5,7 +5,7 @@ import path from 'path';
 const storage = multer.diskStorage({
     // 'destination' - куди класти файл
     destination(req, file, cb) {
-        cb(null, 'backend/uploads/'); // Папка, яку ми створили
+        cb(null, 'uploads/'); // Change to 'uploads/' (relative to CWD)
     },
     // 'filename' - як назвати файл
     filename(req, file, cb) {
